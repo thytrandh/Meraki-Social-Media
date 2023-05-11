@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,WAAW,CAAC;EACR,aAAa,EAAE,WAAW;CAC7B",
+    "sources": [
+        "CardTitle.scss"
+    ],
+    "names": [],
+    "file": "CardTitle.css"
+}
