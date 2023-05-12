@@ -2,16 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
 const initialState = {
-  currentUser: null,
+  currentPost: null,
   loading: false,
   error: false,
 };
-export const getUser = createAsyncThunk(
-  "user/getUser",
+
+export const createPost = createAsyncThunk(
+  "post/createPost",
   async (data, thunkAPI) => {
     try {
-      const result = await api.get("/api/v1/user");
-      // console.log(result.data);
+      const result = await api.post("/api/v1/post", {});
+      //   console.log(result.data);
       return result.data;
     } catch (error) {
       return thunkAPI.rejectWithValue("Error when fetching user information");
@@ -19,28 +20,25 @@ export const getUser = createAsyncThunk(
   }
 );
 
-
-const userSlice = createSlice({
-  name: "user",
+const postSlice = createSlice({
+  name: "post",
   initialState,
   reducers: {},
   extraReducers: {
-    [getUser.pending]: (state, action) => {
+    [createPost.pending]: (state, action) => {
       state.loading = true;
     },
-    [getUser.fulfilled]: (state, action) => {
+    [createPost.fulfilled]: (state, action) => {
       state.loading = false;
-      state.currentUser = action.payload;
+      state.currentPost = action.payload;
       state.error = false;
     },
-    [getUser.rejected]: (state, action) => {
+    [createPost.rejected]: (state, action) => {
       state.loading = false;
       state.error = true;
-    }
-  
+    },
   },
 });
 
-export const {} = userSlice.actions;
-
-export default userSlice.reducer;
+export const {} = postSlice.actions;
+export default postSlice.reducer;

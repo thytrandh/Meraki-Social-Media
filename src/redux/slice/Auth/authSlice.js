@@ -59,6 +59,7 @@ export const verifyRegister = createAsyncThunk(
       const result = await api.post(
         `/api/v1/auth/verifyRegistration?code=${code}&email=${email}`
       );
+      setAuthHeader(result.data.token);
 
       console.log(result.data);
       return result.data; //payload

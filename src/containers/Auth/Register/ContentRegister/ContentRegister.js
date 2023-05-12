@@ -1,14 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import RegisterForm from "../RegisterForm/RegisterForm";
 import VerifyForm from "../VerifyForm/VerifyForm";
-import { StepVerifyContext } from "../Context/stepVerifyContext";
+import { PageContext } from "../Context/pageContext";
 
 const ContentRegister = () => {
-  const [nextPage, setNextPage] = useContext(StepVerifyContext);
+  const [nextPage, setNextPage] = useContext(PageContext);
+
 
   return (
     <div className="content">
-      {nextPage ? <VerifyForm /> : <RegisterForm />}
+      {nextPage > 1 ? <VerifyForm /> : <RegisterForm />}
     </div>
   );
 };

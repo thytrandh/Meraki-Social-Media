@@ -1,13 +1,48 @@
 import { useForm } from "react-hook-form";
 import "../CardPersonalInformation/CardPersonalInformation.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../../../redux/slice/Account/accountSlice";
+import { useEffect } from "react";
 
 const CardPersonalInformation = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
+
+  const dispatch = useDispatch();
+
+
+
+  const initialValues = {
+    username: `${currentUser?.username}`,
+    address: `${currentUser?.address}`,
+    gender: `${currentUser?.gender}`,
+    birthday: `${currentUser?.birthday}`
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
+  } = useForm({
+    defaultValues: initialValues,
+  });
+  const onSubmit = (data) => {
+    console.log(data);
+
+    const { username, address, gender } = data;
+
+    const id = currentUser?.id;
+
+    dispatch(
+      updateUser({
+        id,
+        // username,
+        address,
+        gender,
+        // birthday
+      })
+    );
+  };
+
   return (
     <div className="card-personal-information">
       <div className="title">
@@ -21,17 +56,9 @@ const CardPersonalInformation = () => {
               className="form-control"
               placeholder="Username"
               type="text"
-              {...register("username", { required: true, minLength: 3 })}
+              {...register("username")}
             />
-            <label for="usernameInput">Name</label>
-            {errors.username?.type === "required" && (
-              <span className="err-msg">Username is required</span>
-            )}
-            {errors.username?.type === "minLength" && (
-              <span className="err-msg">
-                Username should be at least 3 characters
-              </span>
-            )}
+            <label for="usernameInput">Username</label>
           </div>
           <div className="group-input form-floating">
             <textarea

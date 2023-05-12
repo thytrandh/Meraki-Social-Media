@@ -13,7 +13,7 @@ import { getUser } from "../../redux/slice/User/userSlice";
 
 const PageSettings = () => {
   const location = useLocation();
-  console.log(location.pathname);
+  // console.log(location.pathname);
 
   const [profileDropdown, setProfileDropdown] = useState(true);
   const dropdownProfileSettings = () => {
@@ -28,10 +28,11 @@ const PageSettings = () => {
   };
 
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
     dispatch(getUser());
-  });
+  }, []);
 
   const [showCard1, setShowCard1] = useState(true);
   const [showCard2, setShowCard2] = useState(false);
@@ -239,10 +240,10 @@ const PageSettings = () => {
           <div className="profile-settings-content">
             <div className="card-profile-information">
               <div className="img-user">
-                <img src="/images/user/user-profile.jpg" alt="" />
+                <img src={currentUser?.avatarLink} alt="" />
               </div>
               <div className="content">
-                <h4 className="userName">Marvin McKinney</h4>
+                <p className="userName mb-0">{currentUser?.username}</p>
                 <p className="mb-0">Member since 2023</p>
               </div>
             </div>

@@ -2,7 +2,7 @@ import { set, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { REGISTER_PAGE } from "../../../../settings/constant";
 import "../VerifyForm/VerifyForm.scss";
-import { StepVerifyContext } from "../Context/stepVerifyContext";
+import { PageContext } from "../Context/pageContext";
 import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,11 +10,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { message } from "antd";
 import { verifyRegister } from "../../../../redux/slice/Auth/authSlice";
+import { EmailRegisterContext } from "../Context/emailRegisterContext";
 
 const VerifyForm = () => {
-  const [nextPage, setNextPage] = useContext(StepVerifyContext);
+  const [nextPage, setNextPage] = useContext(PageContext);
 
-  const email = nextPage;
+  const [emailRegister, setEmailRegister] = useContext(EmailRegisterContext);
+
+  const email = emailRegister;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

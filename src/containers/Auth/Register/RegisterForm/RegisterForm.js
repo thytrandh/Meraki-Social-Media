@@ -4,15 +4,16 @@ import { LOGIN_PAGE, VERIFY_PAGE } from "../../../../settings/constant";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { StepVerifyContext } from "../Context/stepVerifyContext";
+import { PageContext, StepVerifyContext } from "../Context/pageContext";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { registerUser } from "../../../../redux/slice/Auth/authSlice";
 import { message } from "antd";
+import { EmailRegisterContext } from "../Context/emailRegisterContext";
 
 const RegisterForm = () => {
-  const [nextPage, setNextPage] = useContext(StepVerifyContext);
+  const [nextPage, setNextPage] = useContext(PageContext);
 
   const [values, setValues] = useState({});
 
@@ -22,7 +23,7 @@ const RegisterForm = () => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const authError = useSelector((state) => state.auth.error);
 
-  const [emailRegister, setEmailRegister] = useState("");
+  const [emailRegister, setEmailRegister] = useContext(EmailRegisterContext);
 
   const {
     register,
@@ -43,6 +44,7 @@ const RegisterForm = () => {
         enabled,
       })
     );
+
     setEmailRegister(email);
 
     reset({
@@ -61,7 +63,7 @@ const RegisterForm = () => {
     setTimeout(window.location.reload(true), 1000);
     }
     if (currentUser?.status == true) {
-      setNextPage(emailRegister);
+      setNextPage(2);
     }
   });
 

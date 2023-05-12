@@ -4,11 +4,13 @@ import "../AuthPage.scss";
 
 import RegisterForm from "./RegisterForm/RegisterForm";
 import VerifyForm from "./VerifyForm/VerifyForm";
-import { StepVerifyContext } from "./Context/stepVerifyContext";
+import { PageContext } from "./Context/pageContext";
+import { EmailRegisterContext } from "./Context/emailRegisterContext";
 import ContentRegister from "./ContentRegister/ContentRegister";
 
 const Register = () => {
-  const [nextPage, setNextPage] = useState();
+  const [nextPage, setNextPage] = useState(1);
+  const [emailRegister, setEmailRegister] = useState("");
 
   return (
     <div className="auth-page">
@@ -16,9 +18,13 @@ const Register = () => {
         <p className="subject mb-0">Welcome to Meraki!</p>
         <p className="mb-0">Please Register for your account</p>
       </div>
-      <StepVerifyContext.Provider value={[nextPage, setNextPage]}>
-        <ContentRegister />
-      </StepVerifyContext.Provider>
+      <PageContext.Provider value={[nextPage, setNextPage]}>
+        <EmailRegisterContext.Provider
+          value={[emailRegister, setEmailRegister]}
+        >
+          <ContentRegister />
+        </EmailRegisterContext.Provider>
+      </PageContext.Provider>
     </div>
   );
 };

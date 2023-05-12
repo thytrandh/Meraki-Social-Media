@@ -1,13 +1,45 @@
 import { useForm } from "react-hook-form";
 import "../CardAccountInformation/CardAccountInformation.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../../../redux/slice/Account/accountSlice";
 
 const CardAccountInformation = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
+
+  const dispatch = useDispatch();
+
+  const initialValues = {
+    firstname: `${currentUser?.firstName}`,
+    lastname: `${currentUser?.lastName}`,
+    email: `${currentUser?.email}`,
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
+  } = useForm({
+    defaultValues: initialValues,
+  });
+
+  const onSubmit = (data) => {
+    const { firstname, lastname, email } = data;
+
+    const id = currentUser?.id;
+
+    const firstName = firstname;
+    const lastName = lastname;
+
+    dispatch(
+      updateUser({
+        id,
+        firstName,
+        lastName,
+        email,
+      })
+    );
+  };
+
   return (
     <div className="card-account-information">
       <div className="title">
