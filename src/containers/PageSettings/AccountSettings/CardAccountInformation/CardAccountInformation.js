@@ -2,16 +2,20 @@ import { useForm } from "react-hook-form";
 import "../CardAccountInformation/CardAccountInformation.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../../redux/slice/Account/accountSlice";
+import { useContext, useEffect } from "react";
+import { DataContext } from "../../../../context/dataContext";
+import { getAllUser, getUser } from "../../../../redux/slice/User/userSlice";
 
 const CardAccountInformation = () => {
-  const currentUser = useSelector((state) => state.user.currentUser);
+
+  const {userData, setUserData}  = useContext(DataContext);
 
   const dispatch = useDispatch();
 
   const initialValues = {
-    firstname: `${currentUser?.firstName}`,
-    lastname: `${currentUser?.lastName}`,
-    email: `${currentUser?.email}`,
+    firstname: `${userData?.firstName}`,
+    lastname: `${userData?.lastName}`,
+    email: `${userData?.email}`,
   };
 
   const {
@@ -25,7 +29,7 @@ const CardAccountInformation = () => {
   const onSubmit = (data) => {
     const { firstname, lastname, email } = data;
 
-    const id = currentUser?.id;
+    const id = userData?.id;
 
     const firstName = firstname;
     const lastName = lastname;
@@ -39,6 +43,11 @@ const CardAccountInformation = () => {
       })
     );
   };
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getAllUser());
+  }, [updateUser]);
 
   return (
     <div className="card-account-information">

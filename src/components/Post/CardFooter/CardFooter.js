@@ -2,7 +2,7 @@ import { useState } from "react";
 import CardComment from "../CardComment/CardComment";
 import "../CardFooter/CardFooter.scss";
 
-const CardFooter = ({ imgUser, listComment }) => {
+const CardFooter = ({ idPost, imgUser, listComment }) => {
   const [likePost, setLikePost] = useState(false);
   const [collapseComment, setCollapseComment] = useState(false);
 
@@ -13,6 +13,7 @@ const CardFooter = ({ imgUser, listComment }) => {
   const handleClickCollapseComment = () => {
     setCollapseComment(!collapseComment);
   };
+  
 
   return (
     <div className="card-footer">
@@ -43,7 +44,7 @@ const CardFooter = ({ imgUser, listComment }) => {
           <p className="mb-0">Comment</p>
         </div>
       </div>
-      <CardComment imgUser={imgUser} listComment={listComment} />
+      <CardComment idPost={idPost} imgUser={imgUser} listComment={listComment} />
     </div>
   );
 };

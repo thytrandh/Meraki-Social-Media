@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import "../TabAbout/TabAbout.scss";
 
-const TabAbout = () => {
+const TabAbout = ({userName, birthday, gender, address}) => {
+
+ 
   return (
     <div class="tab-pane fade" id="about-tab-pane">
       <div className="row ml-0 mr-0">
@@ -50,21 +52,21 @@ const TabAbout = () => {
               <div className="left-column">
                 <div className="item">
                   <p className="mb-0">NAME</p>
-                  <h5>Marvin McKinney</h5>
+                  <h5>{userName}</h5>
                 </div>
                 <div className="item">
                   <p className="mb-0">BIRTHDAY</p>
-                  <h5>24/01/1994</h5>
+                  <h5>{birthday}</h5>
                 </div>
               </div>
               <div className="right-column">
                 <div className="item">
                   <p className="mb-0">GENDER</p>
-                  <h5>Male</h5>
+                  <h5>{gender}</h5>
                 </div>
                 <div className="item">
                   <p className="mb-0">ADDRESS</p>
-                  <h5>Los Angeles ca.</h5>
+                  <h5>{address}</h5>
                 </div>
               </div>
             </div>

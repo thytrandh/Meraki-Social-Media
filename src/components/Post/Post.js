@@ -4,20 +4,35 @@ import CardFooter from "./CardFooter/CardFooter";
 import CardTitle from "./CardTitle/CardTitle";
 
 const Post = ({
+  idPost,
   imgUser,
-  userName,
+  userPost,
+  imgUserPost,
   activity,
   time,
   status,
   imgPost,
   listComment,
 }) => {
+  const userNamePost = userPost?.firstName + userPost?.lastName;
+  //const imgUserPost = userPost?.avatarLink?.imgLink;
+
   return (
     <div className="post col-sm-12">
       <div className="card-post">
-        <CardTitle userName={userName} activity={activity} time={time} />
+        <CardTitle
+          idPost={idPost}
+          imgUser={imgUserPost}
+          userName={userNamePost}
+          activity={activity}
+          time={time}
+        />
         <CardBody status={status} imgPost={imgPost} />
-        <CardFooter imgUser={imgUser} listComment={listComment} />
+        <CardFooter
+          idPost={idPost}
+          imgUser={imgUser}
+          listComment={listComment}
+        />
       </div>
     </div>
   );

@@ -5,13 +5,17 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { StepContext } from "../../Context/stepContext";
+import { useDispatch, useSelector } from "react-redux";
+import { resetPassword } from "../../../../../redux/slice/Auth/authSlice";
 
 const Step03 = () => {
   const [confirm, setConfirm] = useState(true);
 
   const [values, setValues] = useState({});
 
-  const [step, setStep] = useContext(StepContext);
+  const { step, setStep, verifyCode, email } = useContext(StepContext);
+
+  const err = useSelector((state) => state.auth?.resetPassword?.status);
 
   const {
     register,
@@ -19,9 +23,23 @@ const Step03 = () => {
     formState: { errors },
   } = useForm();
 
+  const dispatch = useDispatch();
   const onSubmit = (data) => {
-    setValues(data);
-    setStep(4);
+    const { newpassword } = data;
+    const newPassword = newpassword;
+    try {
+      dispatch(
+        resetPassword({
+          email,
+          verifyCode,
+          newPassword,
+        })
+      );
+      setStep(4);
+      // if (err === true) {
+      //   setStep(4);
+      // }
+    } catch (error) {}
   };
 
   return (
@@ -56,7 +74,7 @@ const Step03 = () => {
             </span>
           )}
         </div>
-        <div className="input-item mb-1">
+        {/* <div className="input-item mb-1">
           <label for="confirmpassword">
             <p className="mb-0">Confirm Password</p>
           </label>
@@ -76,7 +94,7 @@ const Step03 = () => {
           {values.confirmpassword != values.password && (
             <span className="err-msg">Password do not match</span>
           )}
-        </div>
+        </div> */}
 
         <div className="submit">
           <button type="primary" htmlType="submit" className="btn-submit">

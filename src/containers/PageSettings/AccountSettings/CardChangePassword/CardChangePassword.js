@@ -1,18 +1,56 @@
 import { useForm } from "react-hook-form";
 import "../CardChangePassword/CardChangePassword.scss";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { changePassword } from "../../../../redux/slice/Account/accountSlice";
+import { DataContext } from "../../../../context/dataContext";
+import { message } from "antd";
+import { getAllUser, getUser } from "../../../../redux/slice/User/userSlice";
 
 const CardChangePassword = () => {
-  const [values, setValues] = useState({});
+  const statusChangePassword = useSelector(
+    (state) => state.account?.currentAccount?.status
+  );
+  const messageChangePassword = useSelector(
+    (state) => state.account?.currentAccount?.message
+  );
+
+  const checkCurrentAccount = useSelector(
+    (state) => state.account?.currentAccount
+  );
+
+  const [err, setErr] = useState();
+
+  const dispatch = useDispatch();
+  const { userData } = useContext(DataContext);
+
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    setValues(data);
-    console.log(data);
+    const { password, newpassword } = data;
+
+    const email = userData?.email;
+    const oldPassword = password;
+    const newPassword = newpassword;
+    dispatch(
+      changePassword({
+        email,
+        oldPassword,
+        newPassword,
+      })
+    );
   };
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getAllUser());
+  }, [changePassword]);
+
+
   return (
     <div className="card-change-password">
       <div className="title">
@@ -57,19 +95,27 @@ const CardChangePassword = () => {
               className="form-control"
               placeholder="Confirm New Password"
               type="password"
-              {...register("confirmpassword", { required: true })}
+              {...register("confirmpassword", {
+                required: true,
+                validate: (value) => {
+                  const newPassword = getValues("newpassword");
+                  if (value !== newPassword) {
+                    return "Password is not matched!";
+                  }
+                },
+              })}
             />
             <label for="confirmpasswordInput">Confirm New Password</label>
             {errors.confirmpassword?.type === "required" && (
               <span className="err-msg">Password is required</span>
             )}
-            {values.confirmpassword != values.password && (
-              <span className="err-msg">Password do not match</span>
+            {errors.confirmpassword?.message && (
+              <span className="err-msg">{errors.confirmpassword?.message}</span>
             )}
           </div>
           <div className="footer pt-3">
             <button className="btn-save-change">
-              <p className="mb-0">SAVE CHANGES</p> 
+              <p className="mb-0">SAVE CHANGES</p>
             </button>
           </div>
         </form>

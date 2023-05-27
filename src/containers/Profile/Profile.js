@@ -5,8 +5,44 @@ import TabAbout from "../../components/Profile/ProfileBody/TabContent/TabAbout/T
 import TabFriends from "../../components/Profile/ProfileBody/TabContent/TabFriends/TabFriends";
 import TabGallery from "../../components/Profile/ProfileBody/TabContent/TabGallery/TabGallery";
 import { SETTINGS_PAGE } from "../../settings/constant";
+import { useContext, useEffect, useState } from "react";
+import { DataContext } from "../../context/dataContext";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllPost } from "../../redux/slice/Post/postSlice";
+import {
+  getAllUser,
+  getUser,
+  getUserGallery,
+} from "../../redux/slice/User/userSlice";
+import { getListFriend } from "../../redux/slice/Friend/friendSlice";
 
 const Profile = () => {
+  const { userData } = useContext(DataContext);
+  const idUser = userData?.id;
+  const firstName = userData?.firstName;
+  const lastName = userData?.lastName;
+  const userName = firstName + lastName;
+
+  const dispatch = useDispatch();
+
+  const galleryData = userData?.images;
+
+  const [listFriend, setListFriend] = useState(
+    JSON.parse(localStorage.getItem("listFriend"))
+  );
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getAllUser());
+
+    dispatch(
+      getListFriend({
+        idUser,
+      })
+    );
+    setListFriend(JSON.parse(localStorage.getItem(`listFriendUser-${idUser}`)));
+  }, []);
+
   return (
     <div className="page-profile">
       <div className="profile-header  container p-0">
@@ -19,16 +55,16 @@ const Profile = () => {
             <div className="user-profile">
               <div className="img-user">
                 <div className="img-url">
-                  <img src="/images/user/user-profile.jpg" alt="" />
+                  <img src={userData?.avatarLink?.imgLink} alt="" />
                 </div>
               </div>
               <div className="profile-detail">
                 <div className="profile-name">
                   <div className="username">
-                    <p className="text-white mb-0">Andre Dubus</p>
+                    <p className="text-white mb-0">{userName}</p>
                   </div>
                   <div className="email-address">
-                    <span className="text-white">@Jenny Wilson</span>
+                    <span className="text-white">{userData?.email}</span>
                   </div>
                 </div>
                 <div className="profile-interaction">
@@ -130,10 +166,15 @@ const Profile = () => {
           </div>
         </div>
         <div class="tab-content">
-          <TabTimeLine />
-          <TabAbout />
-          <TabFriends />
-          <TabGallery />
+          <TabTimeLine userPostData={userData} />
+          <TabAbout
+            userName={userName}
+            birthday={userData?.birthday}
+            gender={userData?.gender}
+            address={userData?.address}
+          />
+          <TabFriends listFriend={listFriend} />
+          <TabGallery listImage={galleryData} />
         </div>
       </div>
     </div>

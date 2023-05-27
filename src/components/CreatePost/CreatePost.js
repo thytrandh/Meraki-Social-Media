@@ -1,15 +1,26 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "../CreatePost/CreatePost.scss";
 import CreatePostDropdown from "./CreatePostDropdown/CreatePostDropdown";
 import "./CreatePostDropdown/CreatePostDropdown.scss";
 
-const CreatePost = ({ imgUser, userName }) => {
+import { DataContext } from "../../context/dataContext";
+
+const CreatePost = () => {
+
+  const {userData, setUserData} = useContext(DataContext);
+  const firstName  = userData?.firstName;
+  const lastName = userData?.lastName;
+  const userName = firstName + lastName;
+
+  const imgUser = userData?.avatarLink?.imgLink;
+  
+
   //col-sm-12
   return (
-    <div className="create-post col-sm-12">
+    <div className="create-post">
       <div
         className="card-create-post"
-        data-bs-target="#exampleModalToggle"
+        data-bs-target="#createModalToggle"
         data-bs-toggle="modal"
       >
         <div className="card-body">

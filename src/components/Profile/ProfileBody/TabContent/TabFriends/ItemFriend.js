@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const ItemFriend = ({ imgUser, userName, friendNumber, role }) => {
+const ItemFriend = ({ imgUser, userName, email, role }) => {
   // const [usable, setUsable] = useState(false);
 
   // useEffect(() => {
@@ -17,12 +17,12 @@ const ItemFriend = ({ imgUser, userName, friendNumber, role }) => {
         </div>
         <div className="content">
           <p className="mb-0 username">{userName}</p>
-          <p className="mb-0">{friendNumber} mutual friends</p>
+          <p className="mb-0">Email: {email}</p>
         </div>
       </div>
-      <div className="btn-unfriend">
+      {/* <div className="btn-unfriend">
         <p className="mb-0">Unfriend</p>
-      </div>
+      </div> */}
     </div>
   );
 };

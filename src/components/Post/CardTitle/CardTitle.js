@@ -1,20 +1,34 @@
 import { useState } from "react";
 import "../CardTitle/CardTitle.scss";
+import { useDispatch } from "react-redux";
+import { deletePost } from "../../../redux/slice/Post/postSlice";
 
-const CardTitle = ({ userName, activity, time }) => {
+const CardTitle = ({ idPost, imgUser, userName, activity, time }) => {
   const [dropdown, setDropdown] = useState(false);
   const handleClickDropdown = () => {
     setDropdown(!dropdown);
   };
 
+  const dispath = useDispatch();
+
+  const handleDeletePost = () => {
+    dispath(
+      deletePost({
+        idPost,
+      })
+    );
+  };
+
   //me or myFriend
   const postOwner = "me";
+
+  time = time.slice(0, 10);
 
   return (
     <div className="card-title">
       <div className="user-post-data">
         <div className="img-user">
-          <img src="/images/user/user.jpg" alt="" />
+          <img src={imgUser} alt="" />
         </div>
         <div className="info">
           <div className="d-flex">
@@ -29,7 +43,7 @@ const CardTitle = ({ userName, activity, time }) => {
             </div>
           </div>
           <div className="time">
-            <span>{time} ago</span>
+            <span>{time}</span>
           </div>
         </div>
 
@@ -42,10 +56,17 @@ const CardTitle = ({ userName, activity, time }) => {
           <i class="fa-regular fa-ellipsis"></i>
           {dropdown && (
             <div className="more-dropdown">
-              {postOwner == "me" ? (
+              {postOwner === "me" ? (
                 <ul className="mb-0">
                   <li>
-                    <p className="mb-0">Delete Post</p>
+                    <p
+                      className="mb-0"
+                      onClick={() => {
+                        handleDeletePost();
+                      }}
+                    >
+                      Delete Post
+                    </p>
                   </li>
                   <li>
                     <p className="mb-0">Edit Post</p>

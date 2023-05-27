@@ -2,21 +2,25 @@ import { useForm } from "react-hook-form";
 import "../CardPersonalInformation/CardPersonalInformation.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../../redux/slice/Account/accountSlice";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { getAllUser, getUser } from "../../../../redux/slice/User/userSlice";
+import { message } from "antd";
+import { DataContext } from "../../../../context/dataContext";
 
 const CardPersonalInformation = () => {
-  const currentUser = useSelector((state) => state.user.currentUser);
+  
+  const {userData, setUserData} = useContext(DataContext);
 
   const dispatch = useDispatch();
 
-
-
   const initialValues = {
-    username: `${currentUser?.username}`,
-    address: `${currentUser?.address}`,
-    gender: `${currentUser?.gender}`,
-    birthday: `${currentUser?.birthday}`
+    username: `${userData?.username}`,
+    address: `${userData?.address}`,
+    gender: `${userData?.gender}`,
+    birthday: `${userData?.birthday}`,
   };
+
+  const currentAccount= useSelector((state) => state.account.currentUser)
 
   const {
     register,
@@ -26,11 +30,12 @@ const CardPersonalInformation = () => {
     defaultValues: initialValues,
   });
   const onSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
 
-    const { username, address, gender } = data;
+    const { username, address, gender, birthday } = data;
 
-    const id = currentUser?.id;
+    const id =userData?.id;
+    
 
     dispatch(
       updateUser({
@@ -38,10 +43,22 @@ const CardPersonalInformation = () => {
         // username,
         address,
         gender,
-        // birthday
+        birthday,
       })
     );
   };
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getAllUser());
+  }, [updateUser]);
+
+  // useEffect(() => {
+  //   if(currentAccount?.status == true)
+  //   {
+  //     message.success("Update successfully!");
+  //   }
+  // });
 
   return (
     <div className="card-personal-information">
@@ -88,7 +105,7 @@ const CardPersonalInformation = () => {
               id="birthdayInput"
               className="form-control"
               placeholder="Birthday"
-              type="date"
+              type="text"
               {...register("birthday")}
             />
             <label for="birthdayInput">Birthday</label>

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../CardChangeAvatar/CardChangeAvatar.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   updateAvatar,
   updateUser,
 } from "../../../../redux/slice/Account/accountSlice";
+import { getAllUser, getUser } from "../../../../redux/slice/User/userSlice";
+import { message } from "antd";
 
 const CardChangeAvatar = () => {
   const [image, setImage] = useState(null);
@@ -14,6 +16,8 @@ const CardChangeAvatar = () => {
   const [picture, setPicture] = useState(null);
 
   const dispatch = useDispatch();
+
+  const currentAccount = useSelector((state) => state.account.currentUser);
 
   const saveChangeAvatar = () => {
     console.log(image);
@@ -31,6 +35,11 @@ const CardChangeAvatar = () => {
     });
     // console.log(e.target.files[0]);
   };
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getAllUser());
+  }, [updateAvatar]);
 
   return (
     <div className="card-change-avatar">

@@ -28,6 +28,7 @@ const RegisterForm = () => {
   const {
     register,
     handleSubmit,
+    getValues,
     reset,
     formState: { errors },
   } = useForm();
@@ -35,7 +36,6 @@ const RegisterForm = () => {
     const { username, email, password } = data;
     const enabled = false;
     const userName = username;
-    setValues(data);
     dispatch(
       registerUser({
         userName,
@@ -56,12 +56,6 @@ const RegisterForm = () => {
   };
 
   useEffect(() => {
-    if (authError == true) {
-      message.error(
-        "REGISTER FAIL! Please recheck email adress and try again."
-      );
-    setTimeout(window.location.reload(true), 1000);
-    }
     if (currentUser?.status == true) {
       setNextPage(2);
     }
@@ -149,15 +143,23 @@ const RegisterForm = () => {
             className="content-input"
             placeholder="Confirm Password"
             name="confirmpassword"
-            {...register("confirmpassword", { required: true })}
+            {...register("confirmpassword", {
+              required: true,
+              validate: (value) => {
+                const password = getValues("password");
+                if (value !== password) {
+                  return "Password is not matched!";
+                }
+              },
+            })}
           />
           <i class="fa-light fa-lock"></i>
         </div>
         {errors.confirmpassword?.type === "required" && (
           <span className="err-msg">Confirm Password is required</span>
         )}
-        {values.confirmpassword != values.password && (
-          <span className="err-msg">Password do not match</span>
+        {errors.confirmpassword?.message && (
+          <span className="err-msg">{errors.confirmpassword?.message}</span>
         )}
       </div>
 

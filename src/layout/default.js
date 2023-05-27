@@ -1,14 +1,22 @@
 import Header from "../containers/Layout/Header/Header";
 import Sidebar from "../containers/Layout/Sidebar/Sidebar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "../containers/Layout/Footer/Footer";
 import useWindowSize from "../library/hooks/useWindowSize";
 import FooterMobile from "../containers/Layout/Footer/FooterMobile/FooterMobile";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "../redux/slice/User/userSlice";
+import { getAllUser, getUser } from "../redux/slice/User/userSlice";
+import { DataContext } from "../context/dataContext";
+import { getNewFeed } from "../redux/slice/NewFeed/newFeedSlice";
 
 const Default = () => {
+
+
+
+  const { userData, setUserData, allUserData, setAllUserData, setNewFeedData } = useContext(
+    DataContext
+  );
   const [toggle, setToggle] = useState(false); //open
 
   const handleToggleSidebar = () => {
@@ -18,11 +26,14 @@ const Default = () => {
   const { width } = useWindowSize();
 
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
-    dispatch(getUser());
-  }, []);
+    try {
+      setUserData(JSON.parse(localStorage.getItem("userData")));
+      setAllUserData(JSON.parse(localStorage.getItem("allUserData")));
+      setNewFeedData(JSON.parse(localStorage.getItem("newFeedData")))
+    } catch (error) {}
+  });
 
   return (
     <>

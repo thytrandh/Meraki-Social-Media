@@ -2,19 +2,19 @@ import { Link } from "react-router-dom";
 import CreatePost from "../../../../../components/CreatePost/CreatePost";
 import Post from "../../../../../components/Post/Post";
 import "../TabTimeLine/TabTimeLine.scss";
+import { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllPost } from "../../../../../redux/slice/Post/postSlice";
+import { DataContext } from "../../../../../context/dataContext";
 
-const TabTimeLine = () => {
-  const userName = "Marvin McKinney";
-  const imgUser = "/images/user/user.jpg";
-  const activity = "posted an update in the group";
-  const time = "8 months";
-  const status =
-    "Beautiful things can happen when you distance yourself from the negative. Whatever makes you feel bad, leave it. Whatever makes you smile, keep it. It’s cool to be different and just be who you are and shock people in a good way.";
-  const imgPost = "/images/blog/03.jpg";
-  const listComment = [];
+const TabTimeLine = ({ userPostData }) => {
+  const activity = "posted an update status";
 
-  const friendNumber = 40;
-  const friendState = false;
+  const { userData } = useContext(DataContext);
+
+  const userName = userData?.firstName + userData?.lastName;
+  const postData = userPostData?.posts;
+
   return (
     <div class="tab-pane fade show active" id="timeline-tab-pane">
       <div className="row">
@@ -103,44 +103,30 @@ const TabTimeLine = () => {
             </div>
           </div>
         </div>
-        <div className="right-content list-user-post col-lg-8 row m-0 ">
-          <CreatePost userName={userName} imgUser={imgUser} />
-          <Post
-            imgUser={imgUser}
+        <div className="right-content list-user-post col-lg-8  m-0 ">
+          <CreatePost
             userName={userName}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={imgPost}
-            listComment={listComment}
+            imgUser={userData?.avatarLink?.imgLink}
           />
-          <Post
-            imgUser={imgUser}
-            userName={userName}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={"/images/blog/02.jpg"}
-            listComment={listComment}
-          />
-          <Post
-            imgUser={imgUser}
-            userName={userName}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={"/images/blog/07.jpg"}
-            listComment={listComment}
-          />
-          <Post
-            imgUser={imgUser}
-            userName={userName}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={"/images/blog/b3.jpg"}
-            listComment={listComment}
-          />
+          <div className="list-post-time-line">
+            {postData &&
+              postData
+                .map((post) => (
+                  <Post
+                    key={post.id}
+                    imgUser={userData?.avatarLink?.imgLink}
+                    idPost={post.id}
+                    userPost={userPostData}
+                    imgUserPost={userPostData?.avatarLink?.imgLink}
+                    activity={activity}
+                    time={post.createDate}
+                    status={post.content}
+                    imgPost={post?.images?.imgLink}
+                    listComment={post.commentList}
+                  />
+                ))
+                .reverse()}
+          </div>
         </div>
       </div>
     </div>

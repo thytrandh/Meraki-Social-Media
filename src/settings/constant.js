@@ -1,4 +1,3 @@
-
 //=============== AUTH PAGE ===================================
 
 export const LOGIN_PAGE = "/auth/login";
@@ -7,7 +6,6 @@ export const VERIFY_PAGE = "/auth/verify";
 export const FORGOT_PASSWORD_PAGE = "/auth/forgot-password";
 
 //=============== AUTH PAGE - END =============================
-
 
 //=============== DEFAULT PAGE ===================================
 
@@ -22,7 +20,7 @@ export const SETTINGS_PAGE = "/my-account/settings";
 export const MEMBER_PAGE = "/member/:memberId";
 
 //Message (Chat) Page Section
-export const MESSAGE_PAGE = "/message";
+export const MESSAGE_PAGE = "/message/:userId";
 
 //Notifications (Chat) Page Section
 export const NOTIFICATIONS_PAGE = "/notification";
@@ -30,8 +28,6 @@ export const NOTIFICATIONS_PAGE = "/notification";
 //Notifications (Chat) Page Section
 export const CALENDAR_PAGE = "/calendar";
 
-
 //=============== DEFAULT - END =============================
 
-
-
+export const ADMIN_PAGE = "/admin-page";

@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { StepContext } from "../../Context/stepContext";
 
 const Step02 = () => {
-  const [step, setStep] = useContext(StepContext);
+  const { step, setStep, setVerifyCode } = useContext(StepContext);
 
   const {
     register,
@@ -14,8 +14,10 @@ const Step02 = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
+    const { code1, code2, code3, code4, code5, code6 } = data;
+    const code = String(code1 + code2 + code3 + code4 + code5 + code6);
     setStep(3);
+    setVerifyCode(code);
   };
 
   return (
@@ -23,7 +25,8 @@ const Step02 = () => {
       <div className="title">
         <p className="subject mb-0">Step 02: Enter Verify Code</p>
         <p className="mb-0">
-          We have sent you a verifycation code. Please check your email account now and enter verify code
+          We have sent you a verifycation code. Please check your email account
+          now and enter verify code
         </p>
       </div>
       <form

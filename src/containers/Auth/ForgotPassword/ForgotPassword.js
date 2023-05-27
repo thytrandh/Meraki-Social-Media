@@ -8,7 +8,10 @@ import StepPage from "./StepPage/StepPage";
 
 const ForgotPassword = () => {
   // const [step, setStep] = useContext(stepContext);
-   const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1);
+
+  const [email, setEmail] = useState("");
+  const [verifyCode, setVerifyCode] = useState("");
 
   return (
     <div className="auth-page forgot-password-page">
@@ -16,7 +19,9 @@ const ForgotPassword = () => {
         <p className="subject mb-0">Reset your Password</p>
         <p className="mb-0">Aplatform to connect with the social world. </p>
       </div> */}
-      <StepContext.Provider value={[step, setStep]}>
+      <StepContext.Provider
+        value={{ step, setStep, email, setEmail, verifyCode, setVerifyCode }}
+      >
         <StepPage />
       </StepContext.Provider>
       {/* <div

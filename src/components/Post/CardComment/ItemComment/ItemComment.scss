@@ -7,8 +7,9 @@ li.item-comment {
         align-items: center;
         .img-user {
             img {
-                width: 2.85rem;
-                height: 2.85rem;
+                width: 2.8rem;
+                height: 2.8rem;
+                object-fit: cover;
                 border-radius: 50%;
             }
         }

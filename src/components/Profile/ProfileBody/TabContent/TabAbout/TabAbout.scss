@@ -97,17 +97,42 @@
                 }
             }
             width: 100%;
-            [class*="list-"] {
-                margin-top: 10px;
-                padding: 10px 15px;
-                display: flex;
-                //align-items: center;
-                justify-content: space-between;
+            // [class*="list"] {
+            //     margin-top: 10px;
+            //     padding: 10px 15px;
+            //     display: flex;
+            //     //align-items: center;
+            //     justify-content: space-between;
+            //     .item {
+            //         padding: 20px 0px;
+            //         p {
+            //             font-weight: 500;
+            //             font-size: 0.9rem;
+            //         }
+            //         h5 {
+            //             margin-top: 5px;
+            //             font-weight: 500;
+            //             font-size: 1rem;
+            //         }
+            //     }
+            //     .left-column {
+            //         //width: 50%;
+            //     }
+            //     .right-column {
+            //         //width: 50%;
+            //     }
+            // }
+            .card-personal-info {
+                .list-personal-info-content{
+                    padding: 2rem 1rem;
+                    display: flex;
+                    align-items: center;
+                }
                 .item {
-                    padding: 20px 0px;
+                    padding: 10px 0px;
                     p {
                         font-weight: 500;
-                        font-size: 0.9rem;
+                        font-size: 0.95rem;
                     }
                     h5 {
                         margin-top: 5px;
@@ -115,18 +140,10 @@
                         font-size: 1rem;
                     }
                 }
-                .left-column {
-                    width: 50%;
-                }
-                .right-column {
-                    width: 50%;
-                }
-            }
-            .card-personal-info {
             }
             .card-education-work-info {
                 .list-education-work-content {
-                    width: 100%;
+                    padding: 2rem 1rem;
                     display: flex;
                     flex-direction: column;
                     .item {
@@ -135,21 +152,34 @@
                         display: flex;
                         align-items: center;
                         p {
-                            margin-right: 15px;
+                            font-weight: 500;
+                            font-size: 0.95rem;
+                            margin-right: 1rem;
                         }
                         h5 {
-                            margin-top: 0px;
+                            margin-top: 5px;
+                            font-weight: 500;
                             font-size: 1rem;
                         }
                     }
                 }
             }
             .card-social-network-info {
-                .list-social-network-content {
-                    .item {
-                        h5 {
-                            font-size: 0.9rem;
-                        }
+                .list-social-network-content{
+                    padding: 2rem 1rem;
+                    display: flex;
+                    align-items: start;
+                }
+                .item {
+                    padding: 10px 0px;
+                    p {
+                        font-weight: 500;
+                        font-size: 0.95rem;
+                    }
+                    h5 {
+                        margin-top: 5px;
+                        font-weight: 500;
+                        font-size: 1rem;
                     }
                 }
             }

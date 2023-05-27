@@ -3,18 +3,41 @@ import { Link } from "react-router-dom";
 import { REGISTER_PAGE } from "../../../../../settings/constant";
 import { StepContext } from "../../Context/stepContext";
 import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { sendVerifyCodeByEmail } from "../../../../../redux/slice/Auth/authSlice";
+import { message } from "antd";
 
 const Step01 = () => {
-  const [step, setStep] = useContext(StepContext);
+  const { step, setStep, setEmail } = useContext(StepContext);
+  const err = useSelector((state) => state.auth?.resetPassword?.status);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
+
+  const dispatch = useDispatch();
   const onSubmit = (data) => {
-    setStep(2);
-    console.log(data);
+    const { email } = data;
+    try {
+      dispatch(
+        sendVerifyCodeByEmail({
+          email,
+        })
+      );
+
+      if (err === true) {
+        setStep(2);
+        setEmail(email);
+      } else {
+        message.error("Not found email");
+        reset({
+          email: "",
+        });
+      }
+    } catch (error) {}
   };
   return (
     <div className="step-content">

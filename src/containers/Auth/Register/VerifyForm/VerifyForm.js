@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { message } from "antd";
 import { verifyRegister } from "../../../../redux/slice/Auth/authSlice";
 import { EmailRegisterContext } from "../Context/emailRegisterContext";
+import { getAllUser, getUser } from "../../../../redux/slice/User/userSlice";
 
 const VerifyForm = () => {
   const [nextPage, setNextPage] = useContext(PageContext);
@@ -52,17 +53,17 @@ const VerifyForm = () => {
     });
   };
 
+  const isLogin = localStorage.getItem("isLogin");
+
   useEffect(() => {
-    if (authError == true) {
-      message.error(
-        "VERIFICATION FAILED! Please recheck Verification code and try again."
-      );
-      setTimeout(window.location.reload(true), 1000);
-    }
-    if (currentUser?.token) {
+
+    if (isLogin) {
       navigate("/");
+      dispatch(getUser());
+      dispatch(getAllUser());
+    
     }
-  });
+  },[isLogin]);
 
   return (
     <div className="verify-form">

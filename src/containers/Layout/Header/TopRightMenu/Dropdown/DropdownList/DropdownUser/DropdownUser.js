@@ -1,18 +1,45 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import CardTitle from "../../../../../../../components/TopNavbar/Card/CardTitle/CardTitle";
 import ItemNavigate from "./ItemNavigate";
 import "../DropdownUser/DropdownUser.scss";
-import { PROFILE_PAGE, SETTINGS_PAGE } from "../../../../../../../settings/constant";
+import {
+  PROFILE_PAGE,
+  SETTINGS_PAGE,
+} from "../../../../../../../settings/constant";
+import { UserContext } from "../../../../../../../context/userContext";
+import { DataContext } from "../../../../../../../context/dataContext";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../../../../../redux/slice/Auth/authSlice";
+import { clearLocalStorage } from "../../../../../../../redux/api/setLocalStorage";
+import { AuthContext } from "../../../../../../../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 const DropdownUser = (props) => {
   const [dropdown, setDropdown] = useState(false);
+  const { userData, setUserData } = useContext(DataContext);
+  const [isAuth, setAuth] = useContext(AuthContext);
 
-  const userName = "Hello Aaron Jones";
+  const firstName = userData?.firstName;
+  const lastName = userData?.lastName;
+  const userName = firstName + lastName;
   const state = "Available";
+
+  const navigate = useNavigate();
 
   const handleClickDropdown = (item) => {
     setDropdown(!dropdown);
+  };
+
+  const dispatch = useDispatch();
+
+  const handleLogOut = () => {
+    localStorage.removeItem("isLogin");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("allUserData");
+    localStorage.clear();
+    dispatch(logout());
+    navigate("/auth/login");
   };
 
   return (
@@ -25,7 +52,7 @@ const DropdownUser = (props) => {
         <div className="icon-btn">
           <img
             onClick={() => handleClickDropdown()}
-            src="/images/user/user.jpg"
+            src={userData?.avatarLink?.imgLink}
             className="img-fluid rounded-circle"
             alt="user"
           />
@@ -61,8 +88,13 @@ const DropdownUser = (props) => {
                     navigate={SETTINGS_PAGE}
                   />
                 </div>
-                <div class="btn-logout view-more text-center line-height">
-                  <button href="#" class="btn text-white mb-0 btn-primary">
+                <div
+                  class="btn-logout view-more text-center line-height"
+                  onClick={() => {
+                    handleLogOut();
+                  }}
+                >
+                  <button class="btn text-white mb-0 btn-primary">
                     <span className="">Log Out</span>
                     <img src="/images/icon/iconly/logout.png" alt="" />
                   </button>

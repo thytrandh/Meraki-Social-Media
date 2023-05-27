@@ -1,7 +1,20 @@
 import { useState } from "react";
 import "../SearchItem/SearchItem.scss";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  checkFriend,
+  getListFriend,
+} from "../../../../../../redux/slice/Friend/friendSlice";
 
-const SearchItem = ({ imgUser, userName, friendNumber, friendState }) => {
+const SearchItem = ({
+  idUser,
+  imgUser,
+  userName,
+  email,
+  friendNumber,
+  friendState,
+}) => {
   const [clickAdd, setClickAdd] = useState(friendState);
   //console.log(friendState);
   const handleClickBtnAdd = () => {
@@ -9,10 +22,35 @@ const SearchItem = ({ imgUser, userName, friendNumber, friendState }) => {
 
     //dispatch friendState
   };
-  //console.log(clickAdd);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleNavigate = () => {
+    navigate(`/member/${idUser}`);
+
+    const friendId = idUser;
+    dispatch(
+      checkFriend({
+        friendId,
+      })
+    );
+
+    dispatch(
+      getListFriend({
+        idUser,
+      })
+    );
+    
+  };
 
   return (
-    <div className="search-item item-user">
+    <div
+      className="search-item item-user"
+      onClick={() => {
+        handleNavigate();
+      }}
+    >
       <div className="sub-card sub-card-big d-flex align-items-center justify-content-between">
         <div className="info-user">
           <div className="img-avatar">
@@ -21,9 +59,10 @@ const SearchItem = ({ imgUser, userName, friendNumber, friendState }) => {
           <div className="content media-body ml-3">
             <div className="req">
               <h6 className="mb-0 ">{userName}</h6>
-              <p className="mb-0">{friendNumber} mutual friends</p>
+              <p className="mb-0">{email}</p>
+              {/* <p className="mb-0">{friendNumber} mutual friends</p> */}
             </div>
-            <div class="btn-request">
+            {/* <div class="btn-request">
               {clickAdd ? (
                 <button
                   className="btn-add"
@@ -46,7 +85,7 @@ const SearchItem = ({ imgUser, userName, friendNumber, friendState }) => {
               <button className="btn-remove">
                 <i class="fa-solid fa-xmark"></i>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

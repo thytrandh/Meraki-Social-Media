@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Loader from "../components/Loader/Loader";
 import Login from "../containers/Auth/Login/Login";
@@ -22,12 +22,28 @@ import VerifyPage from "../containers/Auth/VerifyPage/VerifyPage";
 import ForgotPassword from "../containers/Auth/ForgotPassword/ForgotPassword";
 import Notifications from "../containers/Notifications/Notifications";
 import Messages from "../containers/Messages/Messages";
+import { getAllUser, getUser } from "../redux/slice/User/userSlice";
+import { DataContext } from "../context/dataContext";
+import { useDispatch, useSelector } from "react-redux";
+import PrivateAdmin from "./PrivateAdmin";
+import AdminPage from "../containers/AdminPage/AdminPage";
 
 const HomePage = React.lazy(() => import("../containers/Home/Home"));
+const DefaultLayout = React.lazy(() => import("../layout/default"));
 
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* ADMIN */}
+      <Route
+        path="/admin-page"
+        element={
+          <PrivateAdmin>
+            <AdminPage />
+          </PrivateAdmin>
+        }
+      />
+
       <Route path="/auth" element={<AuthLayout />}>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
@@ -41,7 +57,7 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <React.Suspense fallback={<Loader />}>
-              <Default />
+              <DefaultLayout />
             </React.Suspense>
           </PrivateRoute>
         }

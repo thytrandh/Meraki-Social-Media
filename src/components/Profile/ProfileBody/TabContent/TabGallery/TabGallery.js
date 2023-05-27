@@ -2,25 +2,24 @@ import "../TabGallery/TabGallery.scss";
 import { useState } from "react";
 import ModalViewImage from "../../../../../components/ModalViewImage/ModalViewImage";
 
-
-const TabGallery = () => {
-  const images = [
-    "/images/gallery/1.jpg",
-    "/images/gallery/2.jpg",
-    "/images/gallery/3.jpg",
-    "/images/gallery/4.jpg",
-    "/images/gallery/5.jpg",
-    "/images/gallery/6.jpg",
-    "/images/gallery/7.jpg",
-    "/images/gallery/8.jpg",
-    "/images/gallery/9.jpg",
-    "/images/gallery/10.jpg",
-    "/images/gallery/11.jpg",
-    "/images/gallery/12.jpg",
-    "/images/gallery/1.jpg",
-    "/images/gallery/2.jpg",
-    "/images/gallery/3.jpg",
-  ];
+const TabGallery = ({ listImage }) => {
+  // const images = [
+  //   "/images/gallery/1.jpg",
+  //   "/images/gallery/2.jpg",
+  //   "/images/gallery/3.jpg",
+  //   "/images/gallery/4.jpg",
+  //   "/images/gallery/5.jpg",
+  //   "/images/gallery/6.jpg",
+  //   "/images/gallery/7.jpg",
+  //   "/images/gallery/8.jpg",
+  //   "/images/gallery/9.jpg",
+  //   "/images/gallery/10.jpg",
+  //   "/images/gallery/11.jpg",
+  //   "/images/gallery/12.jpg",
+  //   "/images/gallery/1.jpg",
+  //   "/images/gallery/2.jpg",
+  //   "/images/gallery/3.jpg",
+  // ];
 
   const [data, setData] = useState({ img: "", i: 0 });
   const ViewImage = (img, i) => {
@@ -36,14 +35,15 @@ const TabGallery = () => {
           <h4>Gallery</h4>
         </div>
         <div className="gallery mr-0 ml-0">
-          {images.map((image, i) => (
+          {listImage && listImage.map((image) => (
             <div
+              key={image.id}
               className="item-image"
-              onClick={() => ViewImage(image, i)}
+              onClick={() => ViewImage(image.imgLink, image.id)}
               data-bs-toggle="modal"
               data-bs-target="#viewImageModal"
             >
-              <img key={i} src={image} alt="" />
+              <img key={image.id} src={image.imgLink} alt="" />
             </div>
           ))}
         </div>

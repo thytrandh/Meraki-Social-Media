@@ -1,12 +1,94 @@
+import { useContext, useEffect, useState } from "react";
 import TabAbout from "../../components/Profile/ProfileBody/TabContent/TabAbout/TabAbout";
 import TabFriends from "../../components/Profile/ProfileBody/TabContent/TabFriends/TabFriends";
 import TabGallery from "../../components/Profile/ProfileBody/TabContent/TabGallery/TabGallery";
 import TabTimeLine from "../../components/Profile/ProfileBody/TabContent/TabTimeLine/TabTimeLine";
+import { DataContext } from "../../context/dataContext";
 import "../MemberProfile/MemberProfile.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addFriend,
+  getListFriend,
+  unFriend,
+} from "../../redux/slice/Friend/friendSlice";
+import { getAllUser, getUser } from "../../redux/slice/User/userSlice";
 
 const MemberProfile = () => {
-  const profileOwner = 4;
+  const { allUserData } = useContext(DataContext);
+  //const listAllUser = useSelector((state) => state.user?.listAllUser);
+
+  const params = useParams();
+
+  const [memberData, setMemberData] = useState();
+
+  const dispatch = useDispatch();
+
+  const checkFriend = useSelector((state) => state.friend?.isFriend);
+
+  const [isFriend, setIsFriend] = useState(checkFriend?.status);
+
+  const [listFriend, setListFriend] = useState(
+    JSON.parse(localStorage.getItem("listFriend"))
+  );
+
+  const navigate = useNavigate();
+
+  const handleNavigateMessage = () => {
+    const idMember = params.memberId;
+    navigate(`/message/${idMember}`);
+  };
+
+  const handleAddFriend = () => {
+    try {
+      const friendId = params.memberId;
+      dispatch(
+        addFriend({
+          friendId,
+        })
+      );
+      setIsFriend(true);
+    } catch (error) {}
+  };
+
+  const handleUnFriend = () => {
+    try {
+      const friendId = params.memberId;
+      dispatch(
+        unFriend({
+          friendId,
+        })
+      );
+
+      setIsFriend(false);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    const idMember = params.memberId;
+    const indexList = idMember - 1;
+    // console.log(indexList);
+    try {
+      //Render Information
+      setMemberData(allUserData[indexList]);
+      const id = idMember;
+      dispatch(getUser());
+      dispatch(getAllUser());
+
+      //Render List Friend
+      const idUser = idMember;
+      dispatch(
+        getListFriend({
+          idUser,
+        })
+      );
+      setListFriend(
+        JSON.parse(localStorage.getItem(`listFriendUser-${idUser}`))
+      );
+    } catch (error) {}
+  }, []);
+
+  //const profileOwner = 1;
   return (
     <div className="page-member-profile">
       <div className="profile-header  container p-0">
@@ -19,16 +101,18 @@ const MemberProfile = () => {
             <div className="user-profile">
               <div className="img-user">
                 <div className="img-url">
-                  <img src="/images/user/user-member.jpg" alt="" />
+                  <img src={memberData?.avatarLink?.imgLink} alt="" />
                 </div>
               </div>
               <div className="profile-detail">
                 <div className="profile-name">
                   <div className="username">
-                    <p className="text-white mb-0">Andre Dubus</p>
+                    <p className="text-white mb-0">
+                      {memberData?.firstName + memberData?.lastName}
+                    </p>
                   </div>
                   <div className="email-address">
-                    <span className="text-white">@Jenny Wilson</span>
+                    <span className="text-white">{memberData?.email}</span>
                   </div>
                 </div>
                 <div className="profile-interaction">
@@ -60,17 +144,46 @@ const MemberProfile = () => {
                     </li>
                   </ul>
                   <div className="connect">
-                    {profileOwner == 1 && (
-                      <div className="stranger list-btn">
-                        <div className="btn-connect btn-add-friend">
-                          <p className="mb-0">Add Friend</p>
+                    {isFriend ? (
+                      <div className="friend-ship list-btn">
+                        <div
+                          className="btn-connect "
+                          onClick={() => {
+                            handleUnFriend();
+                          }}
+                        >
+                          <p className="mb-0">Unfollow</p>
                         </div>
-                        <Link to="chat/:memberId" className="btn-message">
+                        <div
+                          className="btn-message"
+                          onClick={() => {
+                            handleNavigateMessage();
+                          }}
+                        >
                           <i class="bi bi-messenger"></i>
-                        </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="stranger list-btn">
+                        <div
+                          className="btn-connect"
+                          onClick={() => {
+                            handleAddFriend();
+                          }}
+                        >
+                          <p className="mb-0">Follow</p>
+                        </div>
+                        <div
+                          className="btn-message"
+                          onClick={() => {
+                            handleNavigateMessage();
+                          }}
+                        >
+                          <i class="bi bi-messenger"></i>
+                        </div>
                       </div>
                     )}
-                    {profileOwner == 2 && (
+                    {/* {profileOwner == 2 && (
                       <div className="friend-request list-btn">
                         <div className="btn-connect btn-cancel-request">
                           <p className="mb-0">Cancel Request</p>
@@ -79,18 +192,18 @@ const MemberProfile = () => {
                           <i class="bi bi-messenger"></i>
                         </Link>
                       </div>
-                    )}
-                    {profileOwner == 3 && (
+                    )} */}
+                    {/* {profileOwner == 2 && (
                       <div className="friend-ship list-btn">
                         <div className="btn-connect btn-unfriend">
-                          <p className="mb-0">Unfriend</p>
+                          <p className="mb-0">Unfollow</p>
                         </div>
                         <Link to="chat/:memberId" className="btn-message">
                           <i class="bi bi-messenger"></i>
                         </Link>
                       </div>
-                    )}
-                    {profileOwner == 4 && (
+                    )} */}
+                    {/* {profileOwner == 4 && (
                       <div className="confirm-request list-btn">
                         <div className="btn-connect btn-confirm">
                           <p className="mb-0">Confirm</p>
@@ -102,7 +215,7 @@ const MemberProfile = () => {
                           <i class="bi bi-messenger"></i>
                         </Link>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -155,10 +268,15 @@ const MemberProfile = () => {
           </div>
         </div>
         <div class="tab-content">
-          <TabTimeLine />
-          <TabAbout />
-          <TabFriends />
-          <TabGallery />
+          <TabTimeLine userPostData={memberData} />
+          <TabAbout
+            userName={memberData?.firstName + memberData?.lastName}
+            birthday={memberData?.birthday}
+            gender={memberData?.gender}
+            address={memberData?.address}
+          />
+          <TabFriends listFriend={listFriend} />
+          <TabGallery listImage={memberData?.images} />
         </div>
       </div>
     </div>

@@ -2,13 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../api/api";
-import { setAuthHeader } from "../../api/setHeader";
-
+import { clearAuthHeader, setAuthHeader } from "../../api/setHeader";
+import { message } from "antd";
+import { clearLocalStorage, setLocalStorage } from "../../api/setLocalStorage";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   currentUser: null,
   loading: false,
   error: false,
+  resetPassword: null,
 };
 
 export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
@@ -19,10 +22,17 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
       email,
       password,
     });
-    setAuthHeader(result.data.token);
-    console.log(result);
+    if (result.data === "Email is not Exists") {
+      message.error("LOGIN FAIL! Email is not Exists.");
+    } else {
+      setAuthHeader(result.data.token);
+      localStorage.setItem("isLogin", true);
+    }
     return result.data;
   } catch (error) {
+    message.error(
+      "LOGIN FAIL! Please recheck email adress and password and try again."
+    );
     const errMessage = error.response.data.message;
     return thunkAPI.rejectWithValue(errMessage);
   }
@@ -35,15 +45,18 @@ export const registerUser = createAsyncThunk(
       const { userName, email, password, enabled } = data;
       //call API
       const result = await api.post("/api/v1/auth/register-email", {
-        userName, 
+        userName,
         email,
         password,
         enabled,
       });
 
-      console.log(result.data);
+      //console.log(result.data);
       return result.data; //payload
     } catch (error) {
+      message.error(
+        "REGISTER FAIL! Please recheck email adress and try again."
+      );
       const errMessage = error.result.data.message;
       return thunkAPI.rejectWithValue(errMessage);
     }
@@ -60,9 +73,52 @@ export const verifyRegister = createAsyncThunk(
         `/api/v1/auth/verifyRegistration?code=${code}&email=${email}`
       );
       setAuthHeader(result.data.token);
-
-      console.log(result.data);
+      localStorage.setItem("isLogin", true);
+      //console.log(result.data);
       return result.data; //payload
+    } catch (error) {
+      message.error(
+        "VERIFICATION FAILED! Please recheck Verification code and try again."
+      );
+      const errMessage = error.result.data.message;
+      return thunkAPI.rejectWithValue(errMessage);
+    }
+  }
+);
+
+export const sendVerifyCodeByEmail = createAsyncThunk(
+  "auth/sendVerifyCodeByEmail",
+  async (data, thunkAPI) => {
+    try {
+      const { email } = data;
+      console.log(email);
+
+      const result = await api.post("/api/v1/auth/resetPasswordRequest", {
+        email,
+      });
+      return result.data;
+    } catch (error) {
+      const errMessage = error.result.data.message;
+      return thunkAPI.rejectWithValue(errMessage);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (data, thunkAPI) => {
+    try {
+      const { email, verifyCode, newPassword } = data;
+
+      console.log(email, verifyCode, newPassword);
+
+      const result = await api.post("/api/v1/auth/resetPassword", {
+        email,
+        verifyCode,
+        newPassword,
+      });
+      console.log(result.data);
+      return result.data;
     } catch (error) {
       const errMessage = error.result.data.message;
       return thunkAPI.rejectWithValue(errMessage);
@@ -73,7 +129,11 @@ export const verifyRegister = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state, action) => {
+      clearAuthHeader();
+    },
+  },
   extraReducers: {
     //Login
     [login.pending]: (state, action) => {
@@ -114,10 +174,37 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = true;
     },
+
+    //Send Verify code by email
+    [sendVerifyCodeByEmail.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [sendVerifyCodeByEmail.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.resetPassword = action.payload;
+      state.error = false;
+    },
+    [sendVerifyCodeByEmail.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = true;
+    },
+
+    //Reset Password
+    [resetPassword.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [resetPassword.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.resetPassword = action.payload;
+      state.error = false;
+    },
+    [resetPassword.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = true;
+    },
   },
 });
 
-export const {} = authSlice.actions;
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
-

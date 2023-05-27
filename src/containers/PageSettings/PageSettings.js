@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "../PageSettings/PageSettings.scss";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CardChangeAvatar from "./ProfileSettings/CardChangeAvatar/CardChangeAvatar";
 import CardChangeBackground from "./ProfileSettings/CardChangeBackground/CardChangeBackground";
 import CardPersonalInformation from "./ProfileSettings/CardPersonalInformation/CardPersonalInformation";
@@ -9,9 +9,15 @@ import CardAccountInformation from "./AccountSettings/CardAccountInformation/Car
 import CardChangePassword from "./AccountSettings/CardChangePassword/CardChangePassword";
 import BannerHeader from "../../components/BannerHeader/BannerHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "../../redux/slice/User/userSlice";
+import { getAllUser, getUser } from "../../redux/slice/User/userSlice";
+import { UserContext } from "../../context/userContext";
+import { DataContext } from "../../context/dataContext";
 
 const PageSettings = () => {
+
+
+  const { userData, setUserData } = useContext(DataContext);
+
   const location = useLocation();
   // console.log(location.pathname);
 
@@ -28,11 +34,6 @@ const PageSettings = () => {
   };
 
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.user.currentUser);
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, []);
 
   const [showCard1, setShowCard1] = useState(true);
   const [showCard2, setShowCard2] = useState(false);
@@ -240,10 +241,10 @@ const PageSettings = () => {
           <div className="profile-settings-content">
             <div className="card-profile-information">
               <div className="img-user">
-                <img src={currentUser?.avatarLink} alt="" />
+                <img src={userData?.avatarLink?.imgLink} alt="" />
               </div>
               <div className="content">
-                <p className="userName mb-0">{currentUser?.username}</p>
+                <p className="userName mb-0">{userData?.username}</p>
                 <p className="mb-0">Member since 2023</p>
               </div>
             </div>

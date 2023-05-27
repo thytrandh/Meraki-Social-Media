@@ -6,7 +6,7 @@ import { StepContext } from "../Context/stepContext";
 import Step04 from "./Step04/Step04";
 
 const StepPage = () => {
-  const [step, setStep] = useContext(StepContext);
+  const { step, setStep } = useContext(StepContext);
   return (
     <div className="step-page">
       <div className="multi-step">

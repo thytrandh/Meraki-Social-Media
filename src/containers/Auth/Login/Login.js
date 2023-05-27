@@ -13,14 +13,25 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/authContext";
 import { login } from "../../../redux/slice/Auth/authSlice";
 import { Alert, Space, message } from "antd";
+import { getAllUser, getUser } from "../../../redux/slice/User/userSlice";
+import { DataContext } from "../../../context/dataContext";
+import { getNewFeed } from "../../../redux/slice/NewFeed/newFeedSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { userData, setUserData, setAllUserData } = useContext(DataContext);
+  const [isAuth, setAuth] = useContext(AuthContext);
+
   const authError = useSelector((state) => state.auth.error);
   const authEmailError = useSelector((state) => state.auth.currentUser);
   const currentUser = useSelector((state) => state.auth.currentUser);
+
+  const selectorCurrentUser = useSelector((state) => state.user?.currentUser);
+  //const [isAuth, setAuth] = useContext(AuthContext);
+
+  const checkRole = useSelector((state) => state.user.currentUser?.role);
 
   const {
     register,
@@ -38,43 +49,53 @@ const Login = () => {
         password,
       })
     );
-    
+
+    dispatch(getUser());
+
     reset({
       email: "",
       password: "",
     });
   };
 
+  const isLogin = localStorage.getItem("isLogin");
+
   useEffect(() => {
-    if (authError == true) {
-      message.error(
-        "LOGIN FAIL! Please recheck email adress and password and try again."
-      );
-      setTimeout(window.location.reload(true), 1000);
-    } 
-    if (authEmailError == "Email is not Exists") {
-      message.error("LOGIN FAIL! Email is not Exists.");
-      setTimeout(window.location.reload(true), 1000);
-    }
-
-    if (currentUser?.token) {
-      navigate("/");
-    }
-
-    // if (authError == true) {
-    //   toast.error(
-    //     "Login Fail. Please recheck email adress and password and try again!"
-    //   );
-    //   setTimeout(window.location.reload(true), 8000);
-    // } else if (authEmailError == "Email is not Exists") {
-    //   toast.error(
-    //     "Email is not Exists. Please recheck email adress and password and try again!"
-    //   );
-    //   setTimeout(window.location.reload(true), 8000);
+    // if (isLogin) {
+    //   dispatch(getUser());
+    //   const checkRole = userData?.role;
+    //   if (checkRole === "USER") {
+    //     navigate("/");
+    //     dispatch(getUser());
+    //     dispatch(getAllUser());
+    //     dispatch(getNewFeed());
+    //   } else {
+    //     navigate("/admin-page");
+    //     dispatch(getUser());
+    //     dispatch(getAllUser());
+    //   }
     // }
-    // if(currentUser){
-    //   navigate("/");
-    // };
+
+    if (isLogin) {
+      dispatch(getUser());
+      if (checkRole === "ADMIN") {
+        navigate("/admin-page");
+        setAuth(true);
+        dispatch(getUser());
+        dispatch(getAllUser());
+      } else if (checkRole === "USER") {
+        navigate("/");
+        dispatch(getUser());
+        dispatch(getAllUser());
+        dispatch(getNewFeed());
+      }
+      // } else if (checkRole === "USER") {
+      //   navigate("/");
+      //   dispatch(getUser());
+      //   dispatch(getAllUser());
+      //   dispatch(getNewFeed());
+      // }
+    }
   });
 
   return (

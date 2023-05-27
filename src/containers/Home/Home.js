@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import CardBoxAdvertisement from "../../components/CardAdvertisement/CardBoxAdvertisement/CardBoxAdvertisement";
 import CardeCommerceAdvertising from "../../components/CardAdvertisement/CardeCommerceAdvertising/CardeCommerceAdvertising";
@@ -7,6 +7,7 @@ import ItemFriendSuggestion from "../../components/ItemFriendSuggestion/ItemFrie
 import Post from "../../components/Post/Post";
 import "../Home/Home.scss";
 import BannerHeader from "../../components/BannerHeader/BannerHeader";
+import { DataContext } from "../../context/dataContext";
 
 const Home = () => {
   const userName = "Marvin McKinney";
@@ -21,6 +22,8 @@ const Home = () => {
   const friendNumber = 40;
   const friendState = false;
 
+  const { newFeedData, setNewFeedData, userData } = useContext(DataContext);
+ 
   return (
     <div className="home page-home container">
       <div className="row">
@@ -30,42 +33,21 @@ const Home = () => {
         />
         <div className="news-feed col-xl-8 row m-0 p-0">
           <CreatePost userName={userName} imgUser={imgUser} />
-          <Post
-            imgUser={imgUser}
-            userName={userName}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={imgPost}
-            listComment={listComment}
-          />
-          <Post
-            imgUser={imgUser}
-            userName={"Jenny Willson"}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={"/images/blog/02.jpg"}
-            listComment={listComment}
-          />
-          <Post
-            imgUser={imgUser}
-            userName={userName}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={"/images/blog/07.jpg"}
-            listComment={listComment}
-          />
-          <Post
-            imgUser={imgUser}
-            userName={userName}
-            activity={activity}
-            time={time}
-            status={status}
-            imgPost={"/images/blog/b3.jpg"}
-            listComment={listComment}
-          />
+          {newFeedData &&
+            newFeedData.map((post) => (
+              <Post
+                key={post.id}
+                imgUser={userData?.avatarLink?.imgLink}
+                idPost={post.id}
+                userPost={post.userPost}
+                imgUserPost={post?.userPost?.avatar}
+                activity={activity}
+                time={post.createDate}
+                status={post.content}
+                imgPost={post?.images?.imgLink}
+                listComment={post.commentList}
+              />
+            ))}
         </div>
         <div className="card-advertisement advertisement col-xl-4 d-xl-block">
           <CardeCommerceAdvertising />

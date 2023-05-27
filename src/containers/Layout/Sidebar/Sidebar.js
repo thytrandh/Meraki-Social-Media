@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import "../Sidebar/Sidebar.scss";
 import {
@@ -9,8 +9,16 @@ import {
   PROFILE_PAGE,
   SETTINGS_PAGE,
 } from "../../../settings/constant";
+import { UserContext } from "../../../context/userContext";
+import { DataContext } from "../../../context/dataContext";
 
 const Sidebar = () => {
+
+  const {userData, setUserData} = useContext(DataContext);
+  const firstName  = userData?.firstName;
+  const lastName = userData?.lastName;
+  const userName = firstName + lastName;
+
   // console.log(location.pathname);
   const location = useLocation();
   const pathname = location.pathname;
@@ -113,15 +121,15 @@ const Sidebar = () => {
           <div className="img-avatar">
             <img
               className="avatar-40 rounded-circle"
-              src="/images/user/user.jpg"
+              src={userData?.avatarLink?.imgLink}
               alt=""
             />
           </div>
           <div className="content media-body ml-3">
             <Link to={PROFILE_PAGE}>
-              <h5 className="mb-0 line-height name">Marvin McKinney</h5>
+              <h5 className="mb-0 line-height name">{userName}</h5>
             </Link>
-            <span class="mb-0 line-height">@marvin</span>
+            <span class="mb-0 line-height">{userData?.email}</span>
           </div>
         </div>
         <div className="menu">

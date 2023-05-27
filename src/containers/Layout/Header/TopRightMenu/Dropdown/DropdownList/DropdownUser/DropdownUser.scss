@@ -8,6 +8,9 @@
         transition: all 0.3s ease-out 0s;
         padding: 0px 0px;
         img {
+            width: 3.4rem;
+            height: 3.4rem;
+            object-fit: cover;
             cursor: pointer;
         }
     }

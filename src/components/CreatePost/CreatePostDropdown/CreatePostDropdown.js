@@ -1,13 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPost } from "../../../redux/slice/Post/postSlice";
+import { useDispatch } from "react-redux";
+import "../CreatePostDropdown/CreatePostDropdown.scss";
+import { getAllUser, getUser } from "../../../redux/slice/User/userSlice";
 
 const CreatePostDropdown = ({ userName, imgUser }) => {
-  const [image, setImage] = useState(null);
-  const [fileName, setFileName] = useState("No selected file");
+  // const [image, setImage] = useState(null);
+  // const [fileName, setFileName] = useState("No selected file");
   const [postContent, setPostContent] = useState(null);
+
+  const [picture, setPicture] = useState(null);
+
+  const uploadPicture = (e) => {
+    setPicture({
+      picturePreview: URL.createObjectURL(e.target.files[0]), //show
+      pictureAsFile: e.target.files[0],
+    });
+    // console.log(e.target.files[0]);
+  };
+
+  const dispatch = useDispatch();
+
+  const handleCreatePost = () => {
+    dispatch(
+      createPost({
+        postContent,
+        picture,
+      })
+    );
+  };
+
+
   return (
     <div
       className="create-post-dropdown modal fade"
-      id="exampleModalToggle"
+      id="createModalToggle"
       aria-hidden="true"
       aria-labelledby="exampleModalToggleLabel"
       tabindex="-1"
@@ -55,17 +82,12 @@ const CreatePostDropdown = ({ userName, imgUser }) => {
                     accept="image/*"
                     className="input-filed"
                     hidden
-                    onChange={({ target: { files } }) => {
-                      files[0] && setFileName(files[0].name);
-                      if (files) {
-                        setImage(URL.createObjectURL(files[0]));
-                      }
-                    }}
+                    onChange={uploadPicture}
                   />
 
-                  {image ? (
+                  {picture ? (
                     <div className="img-upload">
-                      <img src={image} />
+                      <img src={picture.picturePreview} />
                     </div>
                   ) : (
                     <div className="add-files">
@@ -84,10 +106,11 @@ const CreatePostDropdown = ({ userName, imgUser }) => {
           <div class="modal-footer">
             <button
               className={
-                postContent || image
+                postContent || picture
                   ? "btn-post btn-post-enable"
                   : "btn-post btn-post-unable"
               }
+              onClick={handleCreatePost}
             >
               Post
             </button>
