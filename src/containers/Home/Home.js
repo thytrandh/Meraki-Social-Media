@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CardBoxAdvertisement from "../../components/CardAdvertisement/CardBoxAdvertisement/CardBoxAdvertisement";
 import CardeCommerceAdvertising from "../../components/CardAdvertisement/CardeCommerceAdvertising/CardeCommerceAdvertising";
@@ -8,22 +8,37 @@ import Post from "../../components/Post/Post";
 import "../Home/Home.scss";
 import BannerHeader from "../../components/BannerHeader/BannerHeader";
 import { DataContext } from "../../context/dataContext";
+import { useDispatch } from "react-redux";
+import { getListFriend } from "../../redux/slice/Friend/friendSlice";
 
 const Home = () => {
+  const { newFeedData, setNewFeedData, userData } = useContext(DataContext);
+  // const listFriendUser = JSON.parse(
+  //   localStorage.getItem(`listFriendUser-${userData.id}`)
+  // );
+
   const userName = "Marvin McKinney";
   const imgUser = "/images/user/user.jpg";
   const activity = "posted an update in the group";
-  const time = "8 months";
-  const status =
-    "Beautiful things can happen when you distance yourself from the negative. Whatever makes you feel bad, leave it. Whatever makes you smile, keep it. It’s cool to be different and just be who you are and shock people in a good way.";
-  const imgPost = "images/blog/03.jpg";
-  const listComment = [];
 
   const friendNumber = 40;
   const friendState = false;
 
-  const { newFeedData, setNewFeedData, userData } = useContext(DataContext);
- 
+  // const findPostById = (id) => {
+  //   newFeedData.filter((val) => val?.userPost.id === id);
+  // };
+
+  // const sortNewFeed = () => {
+  //   listFriendUser.forEach(function())
+  // };
+  // console.log("feed", sortNewFeed);
+
+  // const dispatch = useDispatch();
+  // const idUser = userData?.id;
+  // useEffect(() => {
+  //   dispatch(getListFriend({ idUser }));
+  // }, []);
+
   return (
     <div className="home page-home container">
       <div className="row">
@@ -51,7 +66,7 @@ const Home = () => {
         </div>
         <div className="card-advertisement advertisement col-xl-4 d-xl-block">
           <CardeCommerceAdvertising />
-          <div className="card-friend-suggest">
+          {/* <div className="card-friend-suggest">
             <div className="title">
               <h5>Suggestion For You</h5>
             </div>
@@ -81,7 +96,7 @@ const Home = () => {
                 friendState={friendState}
               />
             </div>
-          </div>
+          </div> */}
           <CardBoxAdvertisement />
         </div>
       </div>

@@ -27,7 +27,7 @@ const Step03 = () => {
   const onSubmit = (data) => {
     const { newpassword } = data;
     const newPassword = newpassword;
-    try {
+    try { 
       dispatch(
         resetPassword({
           email,

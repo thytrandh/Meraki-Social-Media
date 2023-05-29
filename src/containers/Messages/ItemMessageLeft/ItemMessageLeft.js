@@ -1,5 +1,5 @@
 const ItemMessageLeft = ({ imgUser, time, message }) => {
-  time = time.slice(14, 19);
+  time = time.slice(11, 16);
   return (
     <div className="item-message message-left">
       <div className="user-info">

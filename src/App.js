@@ -41,7 +41,7 @@ function App() {
     dispatch(getNewFeed());
     dispatch(getAllUser());
     dispatch(getUser());
-  }, []);
+  },[]);
 
   return (
     <>

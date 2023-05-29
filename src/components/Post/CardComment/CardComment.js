@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { DataContext } from "../../../context/dataContext";
 import { postComment } from "../../../redux/slice/Comment/commentSlice";
 import { useDispatch } from "react-redux";
+import { getUser } from "../../../redux/slice/User/userSlice";
 
 const CardComment = ({ idPost, imgUser, listComment }) => {
   //list comment => render..............
@@ -16,14 +17,13 @@ const CardComment = ({ idPost, imgUser, listComment }) => {
 
   const postId = idPost;
 
-
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
     const { content } = data;
     dispatch(
       postComment({
         postId,
-        content
+        content,
       })
     );
   };

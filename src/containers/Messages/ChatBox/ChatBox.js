@@ -50,7 +50,16 @@ const ChatBox = ({ conversation }) => {
     });
   };
 
- 
+  
+  useEffect(() => {
+    const userId = params.userId;
+    dispatch(
+      getConversation({
+        userId,
+      })
+    );
+  });
+
   //fectch API
   // const imgUser = "/images/user/user-profile.jpg";
   // const message = "Could you please help me to find it out? 🤔";

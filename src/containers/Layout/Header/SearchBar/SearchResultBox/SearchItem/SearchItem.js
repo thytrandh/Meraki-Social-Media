@@ -29,12 +29,12 @@ const SearchItem = ({
   const handleNavigate = () => {
     navigate(`/member/${idUser}`);
 
-    const friendId = idUser;
-    dispatch(
-      checkFriend({
-        friendId,
-      })
-    );
+    // const friendId = idUser;
+    // dispatch(
+    //   checkFriend({
+    //     friendId,
+    //   })
+    // );
 
     dispatch(
       getListFriend({

@@ -8,6 +8,7 @@ import "../MemberProfile/MemberProfile.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  checkFriend,
   addFriend,
   getListFriend,
   unFriend,
@@ -24,9 +25,13 @@ const MemberProfile = () => {
 
   const dispatch = useDispatch();
 
-  const checkFriend = useSelector((state) => state.friend?.isFriend);
+  //const checkFriend = useSelector((state) => state.friend?.isFriend);
 
-  const [isFriend, setIsFriend] = useState(checkFriend?.status);
+  const isFriendData = JSON.parse(
+    localStorage.getItem(`isFriend${params.memberId}`)
+  );
+
+  const [isFriend, setIsFriend] = useState(false);
 
   const [listFriend, setListFriend] = useState(
     JSON.parse(localStorage.getItem("listFriend"))
@@ -47,7 +52,12 @@ const MemberProfile = () => {
           friendId,
         })
       );
-      setIsFriend(true);
+      dispatch(
+        checkFriend({
+          friendId,
+        })
+      );
+      // setIsFriend(true);
     } catch (error) {}
   };
 
@@ -59,15 +69,29 @@ const MemberProfile = () => {
           friendId,
         })
       );
+      dispatch(
+        checkFriend({
+          friendId,
+        })
+      );
 
-      setIsFriend(false);
+      // setIsFriend(false);
     } catch (error) {}
   };
 
   useEffect(() => {
+    const friendId = params.memberId;
+    dispatch(
+      checkFriend({
+        friendId,
+      })
+    );
+
+    setIsFriend(isFriendData?.status);
+
     const idMember = params.memberId;
     const indexList = idMember - 1;
-    // console.log(indexList);
+
     try {
       //Render Information
       setMemberData(allUserData[indexList]);
@@ -86,7 +110,7 @@ const MemberProfile = () => {
         JSON.parse(localStorage.getItem(`listFriendUser-${idUser}`))
       );
     } catch (error) {}
-  }, []);
+  });
 
   //const profileOwner = 1;
   return (

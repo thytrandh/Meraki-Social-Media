@@ -19,6 +19,7 @@ export const checkFriend = createAsyncThunk(
       const result = await api.get(
         `http://localhost:5000/api/v1/is-Friend?friendId=${friendId}`
       );
+      localStorage.setItem(`isFriend${friendId}`, JSON.stringify(result.data));
       console.log(result.data);
       return result.data;
     } catch (error) {
